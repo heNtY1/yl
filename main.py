@@ -8,122 +8,6 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6.QtCore import Qt
 
-template = """<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>729</width>
-    <height>460</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
-  <widget class="QLineEdit" name="wight_Edit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>10</y>
-     <width>113</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="high_Edit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>40</y>
-     <width>113</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="size_Edit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>70</y>
-     <width>113</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>91</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Введите широту:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>40</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Введите долготу:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>70</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Введите масштаб:</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="ok_button">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>40</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Нарисовать</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="map_label">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>140</y>
-     <width>47</width>
-     <height>13</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
- </widget>
- <resources/>
- <connections/>
-</ui>
-"""
-
 
 class MyWidget(QMainWindow):
     def __init__(self):
@@ -133,9 +17,11 @@ class MyWidget(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        f = io.StringIO(template)
-        uic.loadUi(f, self)
+        uic.loadUi('ui_file.ui', self)
         self.ok_button.clicked.connect(self.getImage)
+        self.wight_Edit.setText('55.755811')
+        self.high_Edit.setText('37.617617')
+        self.size_Edit.setText('0.05')
 
     def getImage(self):
         self.a = self.wight_Edit.text()
@@ -166,17 +52,19 @@ class MyWidget(QMainWindow):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Up:
+            print(self.c)
             self.c = float(self.c)
-            self.c += 0.001
+            self.c -= 0.01
         if event.key() == Qt.Key.Key_Down:
+            print('down')
             self.c = float(self.c)
-            self.c -= 0.001
-            try:
-                self.c = str(self.c)
-                self.size_Edit.setText(self.c)
-                self.imagee()
-            except:
-                pass
+            self.c += 0.01
+        try:
+            self.size_Edit.setText(str(self.c))
+            self.imagee()
+        except:
+            print('error')
+            pass
 
 
 def except_hook(cls, exception, traceback):
