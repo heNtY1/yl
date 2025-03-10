@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
+ <class>Formm</class>
  <widget class="QWidget" name="Formm">
   <property name="geometry">
    <rect>
@@ -85,8 +85,8 @@
   <widget class="QPushButton" name="ok_button">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>40</y>
+     <x>158</x>
+     <y>100</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -106,6 +106,29 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="search_Edit">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>10</y>
+     <width>351</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="search_button">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>10</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Поиск</string>
    </property>
   </widget>
  </widget>
