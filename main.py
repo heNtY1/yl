@@ -20,12 +20,33 @@ class MyWidget(QMainWindow):
         uic.loadUi('ui_file.ui', self)
         self.ok_button.clicked.connect(self.getImage)
         self.search_button.clicked.connect(self.shere)
+        self.reset_button.clicked.connect(self.reset)
         self.wight_Edit.setText('55.755811')
         self.high_Edit.setText('37.617617')
         self.size_Edit.setText('0.05')
         self.a = self.wight_Edit.text()
         self.b = self.high_Edit.text()
         self.c = self.size_Edit.text()
+
+    def reset(self):
+        server_address = 'https://static-maps.yandex.ru/v1?'
+        api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
+        self.ll_spn = f'll={self.b},{self.a}&spn={self.c},{self.c}'
+        map_request = f"{server_address}{self.ll_spn}&apikey={api_key}"
+        response = requests.get(map_request)
+
+        if not response:
+            print("Ошибка выполнения запроса:")
+            print(map_request)
+            print("Http статус:", response.status_code, "(", response.reason, ")")
+            sys.exit(1)
+        self.map_file = "map.png"
+        with open(self.map_file, "wb") as file:
+            file.write(response.content)
+
+        self.pixmap = QPixmap(self.map_file)
+        self.map_label.resize(640, 300)
+        self.map_label.setPixmap(self.pixmap)
 
     def shere(self):
         server_address = 'http://geocode-maps.yandex.ru/1.x/?'

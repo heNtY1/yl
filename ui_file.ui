@@ -131,6 +131,19 @@
     <string>Поиск</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="reset_button">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>100</y>
+     <width>91</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Сброс</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
