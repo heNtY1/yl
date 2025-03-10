@@ -39,6 +39,7 @@ class MyWidget(QMainWindow):
             toponym_coodrinates = toponym["Point"]["pos"].split()
             self.wight_Edit.setText(toponym_coodrinates[1])
             self.high_Edit.setText(toponym_coodrinates[0])
+            self.metka = f'pt={toponym_coodrinates[0]},{toponym_coodrinates[1]}'
             self.getImage()
         else:
             print("Ошибка выполнения запроса:")
@@ -49,13 +50,14 @@ class MyWidget(QMainWindow):
         self.a = self.wight_Edit.text()
         self.b = self.high_Edit.text()
         self.c = self.size_Edit.text()
+        self.metka = f'pt={self.b},{self.a}'
         self.imagee()
 
     def imagee(self):
         server_address = 'https://static-maps.yandex.ru/v1?'
         api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
         self.ll_spn = f'll={self.b},{self.a}&spn={self.c},{self.c}'
-        map_request = f"{server_address}{self.ll_spn}&apikey={api_key}"
+        map_request = f"{server_address}{self.ll_spn}&{self.metka}&apikey={api_key}"
         response = requests.get(map_request)
 
         if not response:
