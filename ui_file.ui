@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Formm</class>
- <widget class="QWidget" name="Form">
+ <class>Form</class>
+ <widget class="QWidget" name="Formm">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
+    <width>729</width>
     <height>460</height>
    </rect>
-  </property>
-  <property name="focusPolicy">
-   <enum>Qt::ClickFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -25,9 +22,6 @@
      <height>20</height>
     </rect>
    </property>
-   <property name="focusPolicy">
-    <enum>Qt::ClickFocus</enum>
-   </property>
   </widget>
   <widget class="QLineEdit" name="high_Edit">
    <property name="geometry">
@@ -38,9 +32,6 @@
      <height>20</height>
     </rect>
    </property>
-   <property name="focusPolicy">
-    <enum>Qt::ClickFocus</enum>
-   </property>
   </widget>
   <widget class="QLineEdit" name="size_Edit">
    <property name="geometry">
@@ -50,9 +41,6 @@
      <width>113</width>
      <height>20</height>
     </rect>
-   </property>
-   <property name="focusPolicy">
-    <enum>Qt::ClickFocus</enum>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -97,14 +85,11 @@
   <widget class="QPushButton" name="ok_button">
    <property name="geometry">
     <rect>
-     <x>158</x>
-     <y>100</y>
+     <x>280</x>
+     <y>40</y>
      <width>75</width>
      <height>23</height>
     </rect>
-   </property>
-   <property name="focusPolicy">
-    <enum>Qt::ClickFocus</enum>
    </property>
    <property name="text">
     <string>Нарисовать</string>

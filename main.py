@@ -1,3 +1,5 @@
+import io
+import os
 import sys
 import requests
 
@@ -28,6 +30,7 @@ class MyWidget(QMainWindow):
         self.imagee()
 
     def imagee(self):
+        print(self.c)
         server_address = 'https://static-maps.yandex.ru/v1?'
         api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
         self.ll_spn = f'll={self.b},{self.a}&spn={self.c},{self.c}'
@@ -49,21 +52,15 @@ class MyWidget(QMainWindow):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Up:
-            self.a = float(self.a)
-            self.a += 0.01 * float(self.c) * 50
+            self.c = float(str(self.c)[:5])
+            self.c *= 2
+            if self.c == 0:
+                self.c += 0.001
         if event.key() == Qt.Key.Key_Down:
-            self.a = float(self.a)
-            self.a -= 0.01 * float(self.c) * 50
-        if event.key() == Qt.Key.Key_Right:
-            self.b = float(self.b)
-            self.b += 0.01 * float(self.c) * 50
-
-        if event.key() == Qt.Key.Key_Left:
-            self.b = float(self.b)
-            self.b -= 0.01 * float(self.c) * 50
+            self.c = float(str(self.c)[:5])
+            self.c /= 2
         try:
-            self.wight_Edit.setText(str(self.a))
-            self.high_Edit.setText(str(self.b))
+            self.size_Edit.setText(str(self.c)[:5])
             self.imagee()
         except:
             print('error')
