@@ -61,7 +61,6 @@ class MyWidget(QMainWindow):
         if event.key() == Qt.Key.Key_Left:
             self.b = float(self.b)
             self.b -= 0.01 * float(self.c) * 50
-
         try:
             self.wight_Edit.setText(str(self.a))
             self.high_Edit.setText(str(self.b))
