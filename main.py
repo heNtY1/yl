@@ -1,5 +1,6 @@
 import sys
 import requests
+import math
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QHBoxLayout, QLineEdit, QPushButton, QLabel,
                              QMessageBox, QCheckBox)
@@ -17,11 +18,10 @@ class MyWidget(QMainWindow):
         self.found_addresses = []
         self.current_address_index = -1
         self.map_pixmap = None
-        self.map_rect = None
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Яндекс Карты с поиском по клику")
+        self.setWindowTitle("Яндекс Карты")
         self.setGeometry(100, 100, 800, 650)
 
         central_widget = QWidget()
@@ -51,7 +51,7 @@ class MyWidget(QMainWindow):
         control_layout.addWidget(self.search_Edit)
 
         self.search_button = QPushButton("Поиск")
-        self.search_button.clicked.connect(self.search_address)  # Исправлено на search_address
+        self.search_button.clicked.connect(self.search_address)
         control_layout.addWidget(self.search_button)
 
         self.reset_button = QPushButton("Сброс")
@@ -104,6 +104,83 @@ class MyWidget(QMainWindow):
 
                 self.search_by_coords(new_lon, new_lat)
 
+        elif event.button() == Qt.MouseButton.RightButton and self.map_pixmap:
+            click_pos = event.pos()
+            map_pos = QPoint(
+                click_pos.x() - (self.map_label.width() - self.map_pixmap.width()) // 2,
+                click_pos.y() - (self.map_label.height() - self.map_pixmap.height()) // 2
+            )
+
+            if (0 <= map_pos.x() < self.map_pixmap.width() and
+                    0 <= map_pos.y() < self.map_pixmap.height()):
+                lon = float(self.high_Edit.text())
+                lat = float(self.wight_Edit.text())
+                scale = float(self.size_Edit.text())
+
+                x_ratio = map_pos.x() / self.map_pixmap.width() - 0.5
+                y_ratio = 0.5 - map_pos.y() / self.map_pixmap.height()
+
+                click_lon = lon + x_ratio * scale * 2
+                click_lat = lat + y_ratio * scale * 2
+
+                self.search_organization(click_lon, click_lat)
+
+    def search_organization(self, lon: float, lat: float):
+        try:
+            search_request = (
+                f'https://search-maps.yandex.ru/v1/?'
+                f'apikey={self.api_key}&'
+                f'text=&'
+                f'lang=ru_RU&'
+                f'll={lon},{lat}&'
+                f'spn=0.001,0.001&'
+                f'rspn=1&'
+                f'results=1'
+            )
+
+            response = requests.get(search_request)
+            if response:
+                json_response = response.json()
+
+                self.found_addresses = []
+                self.current_address_index = -1
+                self.address_label.setText("")
+
+                if 'features' in json_response and len(json_response['features']) > 0:
+                    organization = json_response['features'][0]
+                    org_lon, org_lat = organization['geometry']['coordinates']
+
+                    if self.calculate_distance(lon, lat, org_lon, org_lat) <= 50:
+                        org_name = organization['properties']['name']
+                        org_address = organization['properties'].get('description', 'Адрес не указан')
+
+                        self.found_addresses.append({
+                            'address': f"{org_name}, {org_address}",
+                            'postal_code': '',
+                            'lat': str(org_lat),
+                            'lon': str(org_lon)
+                        })
+
+                        self.current_address_index = 0
+                        self.update_address_display()
+                        self.wight_Edit.setText(str(org_lat))
+                        self.high_Edit.setText(str(org_lon))
+                        self.getImage()
+                    else:
+                        QMessageBox.information(self, "Информация", "Организация не найдена в радиусе 50 метров")
+                else:
+                    QMessageBox.information(self, "Информация", "Организация не найдена")
+            else:
+                QMessageBox.warning(self, "Ошибка", "Не удалось выполнить поиск организаций")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при поиске организаций: {str(e)}")
+
+    def calculate_distance(self, lon1: float, lat1: float, lon2: float, lat2: float) -> float:
+        dx = (lon2 - lon1) * 111320 * math.cos(math.radians(lat1))
+        dy = (lat2 - lat1) * 111111
+        return math.sqrt(dx * dx + dy * dy)
+
     def search_by_coords(self, lon: float, lat: float):
         geocoder_request = (
             f'http://geocode-maps.yandex.ru/1.x/?'
@@ -148,8 +225,7 @@ class MyWidget(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Ошибка при поиске по координатам: {str(e)}")
 
-    def search_address(self):  # Переименовано из shere в search_address
-        """Поиск по адресу"""
+    def search_address(self):
         address = self.search_Edit.text()
         if not address:
             QMessageBox.warning(self, "Ошибка", "Введите адрес для поиска")
